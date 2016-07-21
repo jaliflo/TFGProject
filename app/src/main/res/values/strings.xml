@@ -8,4 +8,8 @@
     <string name="scanning">scanning for devices...</string>
     <string name="select_device">select a device to connect</string>
     <string name="none_found">no devices found</string>
+    <string name="title_connected">connected to: </string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_not_connected">not connected</string>
+    <string name="not_connected">You are not connected to a device</string>
 </resources>

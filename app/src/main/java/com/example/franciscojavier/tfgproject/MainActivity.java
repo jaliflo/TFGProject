@@ -54,10 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == REQUEST_ENABLE_BT){
-            if(resultCode == Activity.RESULT_OK){
+            if(resultCode != Activity.RESULT_CANCELED){
                 Toast.makeText(this, "Bluetooth is enable and this device is discoverable", Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, "Bluetooth was not enabled", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode == REQUEST_CONNECT_DEVICE){
+            if(resultCode == Activity.RESULT_OK){
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra(DeviceListActivity.EXTRA_DEVICE_ADDRESS, data.getExtras()
+                        .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS));
+                startActivity(intent);
             }
         }
     }
