@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">TFGProject</string>
+    <string name="app_name">ItsMe</string>
     <string name="login">Login</string>
     <string name="title_paired_devices">Paired Devices</string>
-    <string name="title_other_devices">Other avaiable devices</string>
+    <string name="title_other_devices">Avaiable devices</string>
     <string name="button_scan">Scan for Devices</string>
     <string name="none_paired">No devices have been paired</string>
     <string name="scanning">scanning for devices...</string>
