@@ -3,15 +3,23 @@ package com.example.franciscojavier.tfgproject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,6 +28,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.franciscojavier.tfgproject.database.DbHelper;
+import com.example.franciscojavier.tfgproject.database.DbManager;
+import com.example.franciscojavier.tfgproject.datamodel.Chat;
+import com.example.franciscojavier.tfgproject.datamodel.ChatMessage;
+
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AcceptConDialog.AcceptConDialogListener{
@@ -41,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
     private boolean askedDiscoverability = false;
 
     private String mUsername;
+
+    private DbManager dbManager;
+
+    private Chat mConnectedChat;
 
     /**
      * The Handler that gets information back from the BluetoothChatService
@@ -87,11 +105,14 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     mConversationArrayAdapter.add(mConnectedUserName + ":  " + readMessage);
+                    sendNotification(readMessage);
                     break;
                 case Constants.MESSAGE_USER_NAME:
                     // save the connected device's name
                     mConnectedUserName = msg.getData().getString(Constants.DEVICE_NAME);
                     break;
+                case Constants.MESSAGE_END_CONNECTION:
+                    endChat();
                 case Constants.MESSAGE_TOAST:
 
                     break;
@@ -105,12 +126,15 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
         setContentView(R.layout.activity_main);
 
         final Context context = this;
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             finish();
         }
+
+        dbManager = new DbManager(context);
 
         Button discoveryB = (Button) findViewById(R.id.discoveryB);
         discoveryB.setOnClickListener(new View.OnClickListener() {
@@ -171,8 +195,6 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
     }
 
     private boolean checkBluetooth(){
-        System.out.println(askedDiscoverability);
-
         // If bluetooth is not enable, then turn on it and make the device discoverable permanently
         if(!mBluetoothAdapter.isEnabled()){
             Intent discoverableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -245,6 +267,43 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
                 }
             }
         });
+
+        mConnectedChat = new Chat();
+        mConnectedChat.setStartDateTime(Calendar.getInstance().getTime());
+    }
+
+    private void endChat(){
+        ListView conversationView = (ListView) findViewById(R.id.chatList);
+        Button discoveryB = (Button) findViewById(R.id.discoveryB);
+        Button sendB = (Button) findViewById(R.id.sendB);
+        EditText messageText = (EditText) findViewById(R.id.messageText);
+
+        mOutStringBuffer.setLength(0);
+        messageText.setText(mOutStringBuffer);
+
+        conversationView.setVisibility(View.GONE);
+        sendB.setVisibility(View.GONE);
+        messageText.setVisibility(View.GONE);
+        discoveryB.setVisibility(View.VISIBLE);
+
+        if(dbManager.getUserByName(mConnectedUserName) == null){
+            dbManager.insertUser(mConnectedUserName);
+        }
+
+        mConnectedChat.setFinishDateTime(Calendar.getInstance().getTime());
+        mConnectedChat.setUser(dbManager.getUserByName(mConnectedUserName));
+        dbManager.insertChat(mConnectedChat);
+
+        for(int i=0;i<mConversationArrayAdapter.getCount();i++){
+            String rawMessage = mConversationArrayAdapter.getItem(i);
+            ChatMessage message = Utils.stringToMessage(rawMessage);
+            message.setUser(dbManager.getUserByName(mConnectedUserName));
+            message.setChat(dbManager.getChatByDates(mConnectedChat.getStartDateTime(), mConnectedChat.getFinishDateTime()));
+            dbManager.insertMessage(message);
+        }
+
+        mConnectedChat = null;
+        mConnectedUserName = null;
     }
 
     private void sendUserName(){
@@ -275,6 +334,26 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
             EditText messageText = (EditText) findViewById(R.id.messageText);
             messageText.setText(mOutStringBuffer);
         }
+    }
+
+    public void sendNotification(String message){
+        android.support.v4.app.NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_notify_chat)
+                .setContentTitle("ItsMe")
+                .setContentText(mConnectedUserName+": "+message);
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, mBuilder.build());
     }
 
     /**
@@ -332,6 +411,25 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
                         .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                 connectDevice(address);
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.chat_history:
+                Intent intent = new Intent(this, ChatHistoryActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

@@ -277,10 +277,7 @@ public class BluetoothChatService {
      */
     private void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
-        msg.setData(bundle);
+        Message msg = mHandler.obtainMessage(Constants.MESSAGE_END_CONNECTION);
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
@@ -328,7 +325,7 @@ public class BluetoothChatService {
                     byte[] username = new byte[1024];
                     socket.getInputStream().read(username);
 
-                    sendConfirmRequest(new String(username));
+                    sendConfirmRequest(new String(username, "UTF-8").trim());
                     synchronized (this){
                         try {
                             this.wait();
@@ -430,7 +427,7 @@ public class BluetoothChatService {
 
                 byte[] conf = new byte[3];
                 mmSocket.getInputStream().read(conf);
-                String confS = new String(conf);
+                String confS = new String(conf, "UTF-8").trim();
                 if(!confS.equals("yes")){
                     BluetoothChatService.this.stop();
                     BluetoothChatService.this.start();
@@ -506,7 +503,7 @@ public class BluetoothChatService {
                         // Send the name of the connected user back to the UI Activity
                         Message msg = mHandler.obtainMessage(Constants.MESSAGE_USER_NAME);
                         Bundle bundle = new Bundle();
-                        bundle.putString(Constants.DEVICE_NAME, new String(buffer));
+                        bundle.putString(Constants.DEVICE_NAME, new String(buffer, "UTF-8").trim());
                         msg.setData(bundle);
                         mHandler.sendMessage(msg);
                     }else {

@@ -12,4 +12,5 @@
     <string name="title_connecting">connecting...</string>
     <string name="title_not_connected">not connected</string>
     <string name="not_connected">You are not connected to a device</string>
+    <string name="chat_history">Chat History</string>
 </resources>
