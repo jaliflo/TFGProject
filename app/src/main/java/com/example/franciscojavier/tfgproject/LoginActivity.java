@@ -1,8 +1,10 @@
 package com.example.franciscojavier.tfgproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,16 +13,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.franciscojavier.tfgproject.datamodel.MainUser;
+import com.example.franciscojavier.tfgproject.datamodel.User;
+import com.example.franciscojavier.tfgproject.webapiclient.RestService;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class LoginActivity extends AppCompatActivity {
+    RestService restService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SharedPreferences settings = getSharedPreferences(Constants.PREFFS_NAME, 0);
-        final String username = settings.getString("Username", "");
-        final String password = settings.getString("Password", "-1");
+        restService = new RestService();
+
         final Context context = this;
 
         TextView register = (TextView) findViewById(R.id.regB);
@@ -28,12 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(username.equals("") && password.equals("-1")) {
-                    Intent intent = new Intent(context, ProfileActivity.class);
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(context, "You are alredy registered", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(context, ProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -44,13 +50,30 @@ public class LoginActivity extends AppCompatActivity {
                 EditText usernameET = (EditText) findViewById(R.id.usernameET);
                 EditText passwordET = (EditText) findViewById(R.id.passwordET);
 
-                if(!username.equals(usernameET.getText().toString()) || !password.equals(passwordET.getText().toString())){
-                    Toast.makeText(context, "Incorrect username or password", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(context, "Correct login", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
-                }
+                MainUser user = new MainUser();
+                user.setName(usernameET.getText().toString());
+                user.setPassword(passwordET.getText().toString());
+
+                final ProgressDialog progressDialog = new ProgressDialog(context);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+
+                restService.getApiTFGService().login(user, new Callback<MainUser>() {
+                    @Override
+                    public void success(MainUser user, Response response) {
+                        Toast.makeText(LoginActivity.this, "Correct login", Toast.LENGTH_SHORT).show();
+                        if(progressDialog.isShowing())progressDialog.dismiss();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(LoginActivity.this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                        if(progressDialog.isShowing())progressDialog.dismiss();
+                    }
+                });
             }
         });
     }

@@ -78,8 +78,8 @@ public class DbManager {
 
         if(c != null){
             c.moveToFirst();
-            user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-                    c.getString(c.getColumnIndex(CN_NAME)));
+            //user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
+              //      c.getString(c.getColumnIndex(CN_NAME)));
         }
 
         return user;
@@ -91,8 +91,8 @@ public class DbManager {
         Cursor c = db.rawQuery(selectQuery, null);
 
         if(c.moveToFirst()){
-            user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-                    c.getString(c.getColumnIndex(CN_NAME)));
+            //user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
+              //      c.getString(c.getColumnIndex(CN_NAME)));
         }
         return user;
     }
@@ -104,10 +104,10 @@ public class DbManager {
 
         if(c.moveToFirst()){
             do{
-                User user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-                                     c.getString(c.getColumnIndex(CN_NAME)));
+               // User user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
+                 //                    c.getString(c.getColumnIndex(CN_NAME)));
 
-                users.add(user);
+               // users.add(user);
             }while(c.moveToNext());
         }
 

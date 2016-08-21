@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -31,8 +32,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.franciscojavier.tfgproject.datamodel.MacsList;
+import com.example.franciscojavier.tfgproject.datamodel.User;
+import com.example.franciscojavier.tfgproject.webapiclient.RestService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -57,6 +70,10 @@ public class DeviceListActivity extends Activity {
      */
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
+    private MacsList macsList;
+
+    private RestService restService;
+
     public static Activity deviceListActivity;
 
     @Override
@@ -69,6 +86,9 @@ public class DeviceListActivity extends Activity {
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
+
+        macsList = new MacsList();
+        restService = new RestService();
 
         // Initialize the button to perform device discovery
         Button scanButton = (Button) findViewById(R.id.button_scan);
@@ -171,17 +191,33 @@ public class DeviceListActivity extends Activity {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                macsList.macList.add(device.getAddress());
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
-                setTitle(R.string.select_device);
-                if (mNewDevicesArrayAdapter.getCount() == 0) {
-                    String noDevices = getResources().getText(R.string.none_found).toString();
-                    mNewDevicesArrayAdapter.add(noDevices);
-                }
+                SharedPreferences settings = getSharedPreferences(Constants.PREFFS_NAME, 0);
+                restService.getApiTFGService().getListOfNearbyUsers(settings.getInt("Id", 0), macsList, new Callback<List<String>>() {
+                    @Override
+                    public void success(List<String> strings, Response response) {
+                        for(String user: strings){
+                            mNewDevicesArrayAdapter.add(user+"%");
+                        }
+                        setProgressBarIndeterminateVisibility(false);
+                        setTitle(R.string.select_device);
+
+                        if (mNewDevicesArrayAdapter.getCount() == 0) {
+                            String noDevices = getResources().getText(R.string.none_found).toString();
+                            mNewDevicesArrayAdapter.add(noDevices);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        setProgressBarIndeterminateVisibility(false);
+                        String noDevices = getResources().getText(R.string.none_found).toString();
+                        mNewDevicesArrayAdapter.add(noDevices);
+                    }
+                });
             }
         }
     };
-
 }
