@@ -6,8 +6,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -33,9 +34,10 @@
         <activity
             android:name=".DeviceListActivity"
             android:theme="@android:style/Theme.Holo.Dialog" />
-        <activity android:name=".ChatHistoryActivity"
-                  android:label="@string/chat_history">
-        </activity>
+        <activity
+            android:name=".ChatHistoryActivity"
+            android:label="@string/chat_history" />
+
     </application>
 
 </manifest>

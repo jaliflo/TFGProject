@@ -31,10 +31,20 @@ public class LoginActivity extends AppCompatActivity {
 
         restService = new RestService();
 
+        SharedPreferences settings = getSharedPreferences(Constants.PREFFS_NAME,0);
+        MainUser user = new MainUser();
+        user.setName(settings.getString("Username", ""));
+        user.setPassword(settings.getString("Password", ""));
+
+        System.out.println("Name: "+user.getName()+" Password: "+user.getPassword());
+
+        if(!user.getName().equals("") && !user.getPassword().equals("")){
+            login(user);
+        }
+
         final Context context = this;
 
         TextView register = (TextView) findViewById(R.id.regB);
-
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,26 +64,30 @@ public class LoginActivity extends AppCompatActivity {
                 user.setName(usernameET.getText().toString());
                 user.setPassword(passwordET.getText().toString());
 
-                final ProgressDialog progressDialog = new ProgressDialog(context);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Loading...");
-                progressDialog.show();
+                login(user);
+            }
+        });
+    }
 
-                restService.getApiTFGService().login(user, new Callback<MainUser>() {
-                    @Override
-                    public void success(MainUser user, Response response) {
-                        Toast.makeText(LoginActivity.this, "Correct login", Toast.LENGTH_SHORT).show();
-                        if(progressDialog.isShowing())progressDialog.dismiss();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
+    private void login(MainUser user){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Toast.makeText(LoginActivity.this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
-                        if(progressDialog.isShowing())progressDialog.dismiss();
-                    }
-                });
+        restService.getApiTFGService().login(user, new Callback<MainUser>() {
+            @Override
+            public void success(MainUser user, Response response) {
+                Toast.makeText(LoginActivity.this, "Correct login: Welcome "+user.getName(), Toast.LENGTH_SHORT).show();
+                if(progressDialog.isShowing())progressDialog.dismiss();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(LoginActivity.this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                if(progressDialog.isShowing())progressDialog.dismiss();
             }
         });
     }

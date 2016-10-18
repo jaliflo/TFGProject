@@ -9,11 +9,13 @@ import android.app.TaskStackBuilder;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -36,7 +38,7 @@ import com.example.franciscojavier.tfgproject.datamodel.ChatMessage;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AcceptConDialog.AcceptConDialogListener{
+public class MainActivity extends AppCompatActivity{
 
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -222,21 +224,29 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
     }
 
     private void askConnectionConfirmation(String username){
-        DialogFragment dialog = new AcceptConDialog();
-        Bundle args = new Bundle();
-        args.putString("username", username);
-        dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "AcceptDialog");
-    }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog){
-        mChatService.confirmRequest(true);
-    }
+        alertDialogBuilder.setTitle("Chat Request");
+        alertDialogBuilder
+                .setMessage("Do you want to chat with "+username)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mChatService.confirmRequest(true);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mChatService.confirmRequest(false);
+                    }
+                });
 
-    @Override
-    public void onDialogNegativeClick(DialogFragment dialog){
-        mChatService.confirmRequest(false);
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        this.sendNotification("Chat Request");
+        alertDialog.show();
     }
 
     private void setupChat(){
@@ -431,5 +441,15 @@ public class MainActivity extends AppCompatActivity implements AcceptConDialog.A
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 }

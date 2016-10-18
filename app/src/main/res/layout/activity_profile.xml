@@ -10,150 +10,103 @@
     tools:context="com.example.franciscojavier.tfgproject.ProfileActivity">
 
     <TextView
+        android:text="Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Username"
+        android:layout_marginTop="49dp"
         android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_below="@+id/textView1"
+        android:layout_alignStart="@+id/textView1" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/setUsername"
-        android:layout_alignParentTop="true"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignBottom="@+id/textView3"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView3" />
+        android:id="@+id/countryED"
+        android:layout_alignStart="@+id/usernameED" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/cityED"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_toEndOf="@+id/textView1" />
 
     <TextView
+        android:text="Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Password"
-        android:id="@+id/textView4"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/setUsername" />
+        android:layout_marginTop="77dp"
+        android:id="@+id/textView1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/stateTx" />
 
     <Button
+        android:text="Next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/saveB"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/next_save_b" />
+
+    <TextView
+        android:text="1 of 7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:id="@+id/stateTx"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_alignBaseline="@+id/next_save_b"
+        android:layout_alignBottom="@+id/next_save_b"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/setPassword"
-        android:layout_alignTop="@+id/textView4"
+        android:layout_alignBottom="@+id/textView3"
         android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/setUsername" />
+        android:id="@+id/passwordED"
+        android:layout_alignStart="@+id/usernameED" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/setCityAndCountry"
-        android:layout_below="@+id/setPassword"
-        android:layout_alignEnd="@+id/setPassword"
-        android:layout_toEndOf="@+id/textView5" />
+        android:id="@+id/usernameED"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_toEndOf="@+id/textView1" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="City-Country"
-        android:id="@+id/textView5"
-        android:layout_alignTop="@+id/setCityAndCountry"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Job"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/setCityAndCountry"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/setJob"
-        android:layout_alignTop="@+id/textView6"
-        android:layout_alignEnd="@+id/setCityAndCountry"
-        android:layout_toEndOf="@+id/textView6" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Hobbies"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/setJob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="17dp"
+        android:layout_alignEnd="@+id/cityED"
         android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/setHobbies"
-        android:layout_below="@+id/textView7"
-        android:layout_alignEnd="@+id/setCityAndCountry"
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView2"
+        android:layout_above="@+id/next_save_b"
+        android:id="@+id/optionsList"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Music Tastes"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/setHobbies"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/setMusicTastes"
-        android:layout_below="@+id/textView8"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/setCityAndCountry" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Films Tastes"
-        android:id="@+id/textView9"
-        android:layout_below="@+id/setMusicTastes"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/setFilmTastes"
-        android:layout_below="@+id/textView9"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/setCityAndCountry" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Reading Tastes"
-        android:id="@+id/textView10"
-        android:layout_below="@+id/setFilmTastes"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/setReadingTastes"
-        android:layout_below="@+id/textView10"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/setCityAndCountry" />
 </RelativeLayout>

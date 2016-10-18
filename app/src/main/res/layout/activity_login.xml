@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Password"
-        android:id="@+id/textView2"
+        android:id="@+id/textView3"
         android:layout_below="@+id/usernameET"
         android:layout_alignParentStart="true" />
 
@@ -41,7 +41,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/passwordET"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
@@ -60,6 +60,6 @@
         android:text="Register"
         android:id="@+id/regB"
         android:layout_alignBottom="@+id/loginB"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/textView3" />
 
 </RelativeLayout>

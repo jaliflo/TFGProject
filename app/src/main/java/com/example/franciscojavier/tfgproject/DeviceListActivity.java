@@ -24,6 +24,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.NetworkInfo;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -53,7 +57,7 @@ import retrofit.client.Response;
  * by the user, the MAC address of the device is sent back to the parent
  * Activity in the result Intent.
  */
-public class DeviceListActivity extends Activity {
+public class DeviceListActivity extends Activity implements WifiP2pManager.ConnectionInfoListener{
 
     /**
      * Return Intent extra
@@ -65,6 +69,18 @@ public class DeviceListActivity extends Activity {
      */
     private BluetoothAdapter mBtAdapter;
 
+    private WifiP2pManager mManager;
+    private WifiP2pManager.Channel mChannel;
+
+    private List peers;
+
+    private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener(){
+
+        @Override
+        public void onPeersAvailable(WifiP2pDeviceList peers) {
+
+        }
+    };
     /**
      * Newly discovered devices
      */
@@ -109,11 +125,11 @@ public class DeviceListActivity extends Activity {
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        this.registerReceiver(mReceiver, filter);
+        this.registerReceiver(mBluetoothReceiver, filter);
 
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        this.registerReceiver(mReceiver, filter);
+        this.registerReceiver(mBluetoothReceiver, filter);
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -131,7 +147,7 @@ public class DeviceListActivity extends Activity {
         }
 
         // Unregister broadcast listeners
-        this.unregisterReceiver(mReceiver);
+        this.unregisterReceiver(mBluetoothReceiver);
     }
 
     /**
@@ -165,8 +181,8 @@ public class DeviceListActivity extends Activity {
             mBtAdapter.cancelDiscovery();
 
             // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);
+            String address = macsList.macList.get(arg2);
+
 
             // Create the result Intent and include the MAC address
             Intent intent = new Intent();
@@ -182,7 +198,7 @@ public class DeviceListActivity extends Activity {
      * The BroadcastReceiver that listens for discovered devices and changes the title when
      * discovery is finished
      */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBluetoothReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -198,8 +214,11 @@ public class DeviceListActivity extends Activity {
                 restService.getApiTFGService().getListOfNearbyUsers(settings.getInt("Id", 0), macsList, new Callback<List<String>>() {
                     @Override
                     public void success(List<String> strings, Response response) {
+                        macsList.macList.clear();
                         for(String user: strings){
-                            mNewDevicesArrayAdapter.add(user+"%");
+                            String splitted[] = user.split(",");
+                            mNewDevicesArrayAdapter.add(splitted[0]+"%");
+                            macsList.macList.add(splitted[1]);
                         }
                         setProgressBarIndeterminateVisibility(false);
                         setTitle(R.string.select_device);
@@ -220,4 +239,38 @@ public class DeviceListActivity extends Activity {
             }
         }
     };
+
+    private final BroadcastReceiver mWiFiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)){
+                int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+                if(state == WifiP2pManager.WIFI_P2P_STATE_ENABLED){
+
+                }else{
+
+                }
+            }
+
+            if(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)){
+                if(mManager != null){
+                    mManager.requestPeers(mChannel, peerListListener);
+                }
+            }
+
+            if(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)){
+                NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+                if (networkInfo.isConnected()){
+                    mManager.requestConnectionInfo(mChannel, DeviceListActivity.this);
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+
+    }
 }
