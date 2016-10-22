@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.TaskStackBuilder;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,9 +35,15 @@ import com.example.franciscojavier.tfgproject.database.DbHelper;
 import com.example.franciscojavier.tfgproject.database.DbManager;
 import com.example.franciscojavier.tfgproject.datamodel.Chat;
 import com.example.franciscojavier.tfgproject.datamodel.ChatMessage;
+import com.example.franciscojavier.tfgproject.datamodel.User;
+import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
 import java.util.Calendar;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -61,6 +68,8 @@ public class MainActivity extends AppCompatActivity{
     private DbManager dbManager;
 
     private Chat mConnectedChat;
+
+    private RestService restService;
 
     /**
      * The Handler that gets information back from the BluetoothChatService
@@ -126,6 +135,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        restService = new RestService();
 
         final Context context = this;
 
@@ -224,29 +235,57 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void askConnectionConfirmation(String username){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
-        alertDialogBuilder.setTitle("Chat Request");
-        alertDialogBuilder
-                .setMessage("Do you want to chat with "+username)
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mChatService.confirmRequest(true);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mChatService.confirmRequest(false);
-                    }
-                });
+        User user = new User();
+        user.setName(username);
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        final Context context = this;
+
+        restService.getApiTFGService().getUserData(user, new Callback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+                alertDialogBuilder.setTitle("Chat Request");
+                alertDialogBuilder
+                        .setMessage("Do you want to chat with "+user.getName() + "?\n"
+                            +"Job: "+user.getJob()+"\n"
+                            +"City And Country: "+user.getCityAndCountry()+"\n"
+                            +"Hobbies: "+user.getHobbies()+"\n"
+                            +"Music Tastes: "+user.getMusicTastes()+"\n"
+                            +"Film Tastes: "+user.getFilmsTastes()+"\n"
+                            +"Reading Tastes: "+user.getReadingTastes())
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mChatService.confirmRequest(true);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mChatService.confirmRequest(false);
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                if(progressDialog.isShowing())progressDialog.dismiss();
+                alertDialog.show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if(progressDialog.isShowing())progressDialog.dismiss();
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         this.sendNotification("Chat Request");
-        alertDialog.show();
     }
 
     private void setupChat(){

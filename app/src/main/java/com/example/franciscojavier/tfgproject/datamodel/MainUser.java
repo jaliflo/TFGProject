@@ -7,15 +7,15 @@ public class MainUser extends User{
         super();
     }
 
-    public MainUser(String name, String password, String cityAndCountry, String job, String hobbies,
+    public MainUser(String name, String password, int age, String cityAndCountry, String job, String hobbies,
                     String musicTastes, String filmsTastes, String readingTastes){
-        super(name, cityAndCountry, job, hobbies, musicTastes, filmsTastes, readingTastes);
+        super(name, age, cityAndCountry, job, hobbies, musicTastes, filmsTastes, readingTastes);
         this.password = password;
     }
 
-    public MainUser(int id, String name, String password, String cityAndCountry, String job,
+    public MainUser(int id, String name, String password, int age, String cityAndCountry, String job,
                     String hobbies, String musicTastes, String filmsTastes, String readingTastes){
-        super(id, name, cityAndCountry, job, hobbies, musicTastes, filmsTastes, readingTastes);
+        super(id, name, age, cityAndCountry, job, hobbies, musicTastes, filmsTastes, readingTastes);
         this.password = password;
     }
 

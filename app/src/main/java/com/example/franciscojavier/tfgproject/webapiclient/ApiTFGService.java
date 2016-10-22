@@ -22,4 +22,7 @@ public interface ApiTFGService {
     //GetNearbyUsersByCompatibility (http://192.168.1.40:8080/api/calculateuserscompatibility/{id}
     @POST("/calculateuserscompatibility/{id}")
     public void getListOfNearbyUsers(@Path("id") Integer id, @Body MacsList macsList, Callback<List<String>> callback);
+
+    @POST("/usersmanager/getUsersComp")
+    public void getUserData(@Body User contactedUser, Callback<User> callback);
 }

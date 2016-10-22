@@ -9,6 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.franciscojavier.tfgproject.ProfileActivity">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/ageED"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignParentEnd="true" />
+
     <TextView
         android:text="Password"
         android:layout_width="wrap_content"
@@ -60,7 +69,7 @@
         android:id="@+id/next_save_b" />
 
     <TextView
-        android:text="1 of 7"
+        android:text="1 of 6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -100,6 +109,24 @@
         android:layout_marginTop="17dp"
         android:layout_alignEnd="@+id/cityED"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/textView3" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/jobED"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignParentEnd="true" />
 
     <ListView
         android:layout_width="match_parent"

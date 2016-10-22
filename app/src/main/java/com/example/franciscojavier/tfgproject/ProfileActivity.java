@@ -54,12 +54,14 @@ public class ProfileActivity extends AppCompatActivity{
 
         EditText setCity = (EditText) findViewById(R.id.cityED);
         EditText setCountry = (EditText) findViewById(R.id.countryED);
+        EditText setJob = (EditText) findViewById(R.id.jobED);
         TextView text2 = (TextView) findViewById(R.id.textView2);
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         setCity.setVisibility(View.GONE);
         setCountry.setVisibility(View.GONE);
         text2.setVisibility(View.GONE);
         optionsList.setVisibility(View.GONE);
+        setJob.setVisibility(View.GONE);
 
         final Context context = this;
         restService = new RestService();
@@ -110,27 +112,35 @@ public class ProfileActivity extends AppCompatActivity{
                 TextView text1 = (TextView) findViewById(R.id.textView1);
                 TextView text2 = (TextView) findViewById(R.id.textView3);
                 TextView text3 = (TextView) findViewById(R.id.textView2);
+                TextView text4 = (TextView) findViewById(R.id.textView4);
                 EditText setCity = (EditText) findViewById(R.id.cityED);
                 EditText setCountry = (EditText) findViewById(R.id.countryED);
                 EditText setUsername = (EditText) findViewById(R.id.usernameED);
                 EditText setPassword = (EditText) findViewById(R.id.passwordED);
+                EditText setJob = (EditText) findViewById(R.id.jobED);
+                EditText setAge = (EditText) findViewById(R.id.ageED);
                 ListView optionsList = (ListView) findViewById(R.id.optionsList);
 
                 String username = "";
                 String password = "";
                 String cityAndCountry = "";
+                String job = "";
+                int age = 0;
 
                 if(stateInt == 1){
-                    if(!setUsername.getText().toString().equals("") && !setPassword.getText().toString().equals("")){
+                    if(!setUsername.getText().toString().equals("") && !setPassword.getText().toString().equals("") && !setAge.toString().equals("")){
                         Toast.makeText(context, "Good, username and password are correct!", Toast.LENGTH_SHORT).show();
                         state.setText("2 of 6");
                         text1.setText("City");
                         text2.setText("Country");
+                        text4.setText("Job");
                         stateInt++;
                         setUsername.setVisibility(View.GONE);
                         setPassword.setVisibility(View.GONE);
+                        setAge.setVisibility(View.GONE);
                         setCity.setVisibility(View.VISIBLE);
                         setCountry.setVisibility(View.VISIBLE);
+                        setJob.setVisibility(View.VISIBLE);
                     }else{
                         Toast.makeText(context, "Something wrong...", Toast.LENGTH_SHORT).show();
                     }
@@ -141,8 +151,10 @@ public class ProfileActivity extends AppCompatActivity{
                         stateInt++;
                         text1.setVisibility(View.GONE);
                         text2.setVisibility(View.GONE);
+                        text4.setVisibility(View.GONE);
                         setCity.setVisibility(View.GONE);
                         setCountry.setVisibility(View.GONE);
+                        setJob.setVisibility(View.GONE);
                         text3.setVisibility(View.VISIBLE);
                         hobbies.clear();
                         optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_HOBBIES));
@@ -181,6 +193,8 @@ public class ProfileActivity extends AppCompatActivity{
                     username = setUsername.getText().toString();
                     password = setPassword.getText().toString();
                     cityAndCountry = setCity.getText().toString()+"-"+setCountry.getText().toString();
+                    job = setJob.getText().toString();
+                    age = Integer.parseInt(setAge.getText().toString());
 
                     String hobbiesS = "";
                     for(String hobbie: hobbies){
@@ -215,7 +229,7 @@ public class ProfileActivity extends AppCompatActivity{
                         }
                     }
 
-                    MainUser user = new MainUser(username, password, cityAndCountry, "",hobbiesS,musicS,filmS,readS);
+                    MainUser user = new MainUser(username, password, age, cityAndCountry, job, hobbiesS,musicS,filmS,readS);
                     user.setBluetoothMac(android.provider.Settings.Secure.getString(context.getContentResolver(), "bluetooth_address"));
                     SharedPreferences settings = getSharedPreferences(Constants.PREFFS_NAME, 0);
                     final SharedPreferences.Editor editor = settings.edit();
@@ -224,6 +238,7 @@ public class ProfileActivity extends AppCompatActivity{
                         @Override
                         public void success(MainUser mainUser, Response response) {
                             editor.putInt("Id", mainUser.getId());
+                            editor.putInt("Age", mainUser.getAge());
                             editor.putString("Username", mainUser.getName());
                             editor.putString("Password", mainUser.getPassword());
                             editor.putString("CityAndCountry", mainUser.getCityAndCountry());
@@ -329,27 +344,35 @@ public class ProfileActivity extends AppCompatActivity{
     private void backToCredentials(){
         TextView text1 = (TextView) findViewById(R.id.textView1);
         TextView text2 = (TextView) findViewById(R.id.textView3);
+        TextView text4 = (TextView) findViewById(R.id.textView4);
         EditText setUsername = (EditText) findViewById(R.id.usernameED);
         EditText setPassword = (EditText) findViewById(R.id.passwordED);
+        EditText setAge = (EditText) findViewById(R.id.ageED);
         setUsername.setVisibility(View.VISIBLE);
         setPassword.setVisibility(View.VISIBLE);
+        setAge.setVisibility(View.VISIBLE);
         EditText setCity = (EditText) findViewById(R.id.cityED);
         EditText setCountry = (EditText) findViewById(R.id.countryED);
+        EditText setJob = (EditText) findViewById(R.id.jobED);
         setCity.setVisibility(View.GONE);
         setCountry.setVisibility(View.GONE);
+        setJob.setVisibility(View.GONE);
         state.setText("1 of 6");
         text1.setText("Username");
         text2.setText("Password");
+        text4.setText("Age");
         stateInt--;
     }
 
     private void backToCityAndCountry(){
         TextView text1 = (TextView) findViewById(R.id.textView1);
         TextView text2 = (TextView) findViewById(R.id.textView3);
+        TextView text4 = (TextView) findViewById(R.id.textView4);
         EditText setUsername = (EditText) findViewById(R.id.usernameED);
         EditText setPassword = (EditText) findViewById(R.id.passwordED);
         EditText setCity = (EditText) findViewById(R.id.cityED);
         EditText setCountry = (EditText) findViewById(R.id.countryED);
+        EditText setJob = (EditText) findViewById(R.id.jobED);
         TextView text3 = (TextView) findViewById(R.id.textView2);
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         setUsername.setVisibility(View.GONE);
@@ -358,11 +381,14 @@ public class ProfileActivity extends AppCompatActivity{
         optionsList.setVisibility(View.GONE);
         setCity.setVisibility(View.VISIBLE);
         setCountry.setVisibility(View.VISIBLE);
+        setJob.setVisibility(View.VISIBLE);
         state.setText("2 of 6");
         text1.setVisibility(View.VISIBLE);
         text2.setVisibility(View.VISIBLE);
+        text4.setVisibility(View.VISIBLE);
         text1.setText("City");
         text2.setText("Country");
+        text4.setText("Job");
         stateInt--;
     }
 

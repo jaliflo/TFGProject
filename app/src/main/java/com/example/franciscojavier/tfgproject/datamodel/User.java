@@ -3,6 +3,7 @@ package com.example.franciscojavier.tfgproject.datamodel;
 public class User {
     private int id;
     private String name;
+    private int age;
     private String bluetoothMac;
     private String cityAndCountry;
     private String job;
@@ -14,9 +15,10 @@ public class User {
     public User(){
     }
 
-    public User(String name, String cityAndCountry, String job, String hobbies, String musicTastes,
+    public User(String name, int age, String cityAndCountry, String job, String hobbies, String musicTastes,
                 String filmsTastes, String readingTastes){
         this.name = name;
+        this.age = age;
         this.cityAndCountry = cityAndCountry;
         this.job = job;
         this.hobbies = hobbies;
@@ -25,10 +27,11 @@ public class User {
         this.readingTastes = readingTastes;
     }
 
-    public User(int id, String name, String cityAndCountry, String job, String hobbies,
+    public User(int id, String name, int age, String cityAndCountry, String job, String hobbies,
                 String musicTastes, String filmsTastes, String readingTastes){
         this.id = id;
         this.name = name;
+        this.age = age;
         this.cityAndCountry = cityAndCountry;
         this.job = job;
         this.hobbies = hobbies;
@@ -108,4 +111,8 @@ public class User {
     public void setBluetoothMac(String bluetoothMac) {
         this.bluetoothMac = bluetoothMac;
     }
+
+    public void setAge(int age){this.age = age;}
+
+    public int getAge(){return age;}
 }

@@ -106,15 +106,6 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
         macsList = new MacsList();
         restService = new RestService();
 
-        // Initialize the button to perform device discovery
-        Button scanButton = (Button) findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doDiscovery();
-                v.setVisibility(View.GONE);
-            }
-        });
-
         // Initialize array adapter
         mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -135,6 +126,8 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         deviceListActivity = this;
+
+        doDiscovery();
     }
 
     @Override

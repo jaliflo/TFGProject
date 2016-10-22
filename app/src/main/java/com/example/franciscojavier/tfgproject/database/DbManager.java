@@ -28,6 +28,13 @@ public class DbManager {
 
     //Users table column names
     public static final String CN_NAME = "name";
+    public static final String CN_AGE = "age";
+    public static final String CN_CITYANDCOUNTRY = "cityandcountry";
+    public static final String CN_JOB = "job";
+    public static final String CN_HOBBIES = "hobbies";
+    public static final String CN_MUSICTASTES = "musictastes";
+    public static final String CN_FILMTASTES = "filmtastes";
+    public static final String CN_READINGTASTES = "readingtastes";
 
     //Chats table column names
     public static final String CN_STARTTIME = "start_time";
@@ -41,7 +48,14 @@ public class DbManager {
     //Users create table
     public static final String CREATE_USERS = "create table "+TABLE_USERS+" ("
             +KEY_ID+" integer primary key autoincrement,"
-            +CN_NAME+" text not null);";
+            +CN_NAME+" text not null,"
+            +CN_AGE+" text not null,"
+            +CN_CITYANDCOUNTRY+" text,"
+            +CN_JOB+" text,"
+            +CN_MUSICTASTES+" text,"
+            +CN_HOBBIES+" text,"
+            +CN_FILMTASTES+" text,"
+            +CN_READINGTASTES+" text);";
 
     //Chats create table
     public static final String CREATE_CHATS = "create table "+TABLE_CHATS+" ("
@@ -78,8 +92,16 @@ public class DbManager {
 
         if(c != null){
             c.moveToFirst();
-            //user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-              //      c.getString(c.getColumnIndex(CN_NAME)));
+            user = new User();
+            user.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+            user.setName(c.getString(c.getColumnIndex(CN_NAME)));
+            user.setAge(c.getInt(c.getColumnIndex(CN_AGE)));
+            user.setCityAndCountry(c.getString(c.getColumnIndex(CN_CITYANDCOUNTRY)));
+            user.setJob(c.getString(c.getColumnIndex(CN_JOB)));
+            user.setHobbies(c.getString(c.getColumnIndex(CN_HOBBIES)));
+            user.setMusicTastes(c.getString(c.getColumnIndex(CN_MUSICTASTES)));
+            user.setFilmsTastes(c.getString(c.getColumnIndex(CN_FILMTASTES)));
+            user.setReadingTastes(c.getString(c.getColumnIndex(CN_READINGTASTES)));
         }
 
         return user;
@@ -91,8 +113,16 @@ public class DbManager {
         Cursor c = db.rawQuery(selectQuery, null);
 
         if(c.moveToFirst()){
-            //user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-              //      c.getString(c.getColumnIndex(CN_NAME)));
+            user = new User();
+            user.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+            user.setName(c.getString(c.getColumnIndex(CN_NAME)));
+            user.setAge(c.getInt(c.getColumnIndex(CN_AGE)));
+            user.setCityAndCountry(c.getString(c.getColumnIndex(CN_CITYANDCOUNTRY)));
+            user.setJob(c.getString(c.getColumnIndex(CN_JOB)));
+            user.setHobbies(c.getString(c.getColumnIndex(CN_HOBBIES)));
+            user.setMusicTastes(c.getString(c.getColumnIndex(CN_MUSICTASTES)));
+            user.setFilmsTastes(c.getString(c.getColumnIndex(CN_FILMTASTES)));
+            user.setReadingTastes(c.getString(c.getColumnIndex(CN_READINGTASTES)));
         }
         return user;
     }
@@ -104,10 +134,18 @@ public class DbManager {
 
         if(c.moveToFirst()){
             do{
-               // User user = new User(c.getInt(c.getColumnIndex(KEY_ID)),
-                 //                    c.getString(c.getColumnIndex(CN_NAME)));
+                User user = new User();
+                user.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                user.setName(c.getString(c.getColumnIndex(CN_NAME)));
+                user.setAge(c.getInt(c.getColumnIndex(CN_AGE)));
+                user.setCityAndCountry(c.getString(c.getColumnIndex(CN_CITYANDCOUNTRY)));
+                user.setJob(c.getString(c.getColumnIndex(CN_JOB)));
+                user.setHobbies(c.getString(c.getColumnIndex(CN_HOBBIES)));
+                user.setMusicTastes(c.getString(c.getColumnIndex(CN_MUSICTASTES)));
+                user.setFilmsTastes(c.getString(c.getColumnIndex(CN_FILMTASTES)));
+                user.setReadingTastes(c.getString(c.getColumnIndex(CN_READINGTASTES)));
 
-               // users.add(user);
+                users.add(user);
             }while(c.moveToNext());
         }
 
