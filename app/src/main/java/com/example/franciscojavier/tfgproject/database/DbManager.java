@@ -49,7 +49,7 @@ public class DbManager {
     public static final String CREATE_USERS = "create table "+TABLE_USERS+" ("
             +KEY_ID+" integer primary key autoincrement,"
             +CN_NAME+" text not null,"
-            +CN_AGE+" text not null,"
+            +CN_AGE+" text,"
             +CN_CITYANDCOUNTRY+" text,"
             +CN_JOB+" text,"
             +CN_MUSICTASTES+" text,"
@@ -82,7 +82,7 @@ public class DbManager {
     public DbManager(Context context){
         helper = new DbHelper(context);
         db = helper.getWritableDatabase();
-        format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public User getUser(int id){

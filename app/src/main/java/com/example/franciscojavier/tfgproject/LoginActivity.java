@@ -36,8 +36,6 @@ public class LoginActivity extends AppCompatActivity {
         user.setName(settings.getString("Username", ""));
         user.setPassword(settings.getString("Password", ""));
 
-        System.out.println("Name: "+user.getName()+" Password: "+user.getPassword());
-
         if(!user.getName().equals("") && !user.getPassword().equals("")){
             login(user);
         }

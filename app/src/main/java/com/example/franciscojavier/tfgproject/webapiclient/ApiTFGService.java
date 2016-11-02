@@ -25,4 +25,10 @@ public interface ApiTFGService {
 
     @POST("/usersmanager/getUsersComp")
     public void getUserData(@Body User contactedUser, Callback<User> callback);
+
+    @POST("/chatsbackup/insertChats/{id}")
+    public void uploadChats(@Path("id") Integer id, @Body Chats chats, Callback<Chats> callback);
+
+    @POST("/chatsbackup/insertMessages/{id}")
+    public void uploadMessages(@Path("id") Integer id, @Body Messages messages, Callback<Messages> callback);
 }
