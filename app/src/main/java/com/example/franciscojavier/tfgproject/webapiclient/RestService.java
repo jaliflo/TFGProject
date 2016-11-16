@@ -3,7 +3,7 @@ package com.example.franciscojavier.tfgproject.webapiclient;
 import retrofit.RestAdapter;
 
 public class RestService {
-    private static final String URL ="http://192.168.1.40:8080/api/";
+    private static final String URL ="http://83.49.161.24:8080/api/";
     private retrofit.RestAdapter restAdapter;
     private ApiTFGService apiTFGService;
 

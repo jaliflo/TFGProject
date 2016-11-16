@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.franciscojavier.tfgproject.datamodel.MainUser;
 import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,15 @@ public class ProfileActivity extends AppCompatActivity{
     private TextView state;
     private int stateInt;
 
-    private final String[] OPTIONS_HOBBIES = {"sports", "play music"};
-    private final String[] OPTIONS_MUSIC = {"rock"};
-    private final String[] OPTIONS_FILM = {"action"};
-    private final String[] OPTIONS_READ = {"fantasy"};
+    private final String[] OPTIONS_HOBBIES = {"video games", "skating", "cycling",
+            "hiking", "photography", "riddles", "singing", "music instruments", "soccer", "basket"};
+    private final String[] OPTIONS_MUSIC = {"rock", "metal", "flamenco", "reggaeton", "indie",
+            "alternative", "electro music", "dubstep", "pop", "chill out", "blues"};
+    private final String[] OPTIONS_FILM = {"action", "adventure", "drama", "romance", "thriller",
+            "comedy", "terror", "documentary", "indie", "sciene fiction", "history"};
+    private final String[] OPTIONS_READ = {"fantasy", "science fiction", "drama", "adventure",
+            "romance", "thriller", "terror", "graphic novel", " comic", "autobiography", "history",
+            "poetry", "script"};
 
     private List<String> music;
     private List<String> film;
@@ -128,19 +134,24 @@ public class ProfileActivity extends AppCompatActivity{
                 int age = 0;
 
                 if(stateInt == 1){
-                    if(!setUsername.getText().toString().equals("") && !setPassword.getText().toString().equals("") && !setAge.toString().equals("")){
-                        Toast.makeText(context, "Good, username and password are correct!", Toast.LENGTH_SHORT).show();
-                        state.setText("2 of 6");
-                        text1.setText("City");
-                        text2.setText("Country");
-                        text4.setText("Job");
-                        stateInt++;
-                        setUsername.setVisibility(View.GONE);
-                        setPassword.setVisibility(View.GONE);
-                        setAge.setVisibility(View.GONE);
-                        setCity.setVisibility(View.VISIBLE);
-                        setCountry.setVisibility(View.VISIBLE);
-                        setJob.setVisibility(View.VISIBLE);
+                    if(!setUsername.getText().toString().equals("") && !setPassword.getText().toString().equals("") && !setAge.getText().toString().equals("")){
+                        try {
+                            Integer.parseInt(setAge.getText().toString());
+                            Toast.makeText(context, "Good, username and password are correct!", Toast.LENGTH_SHORT).show();
+                            state.setText("2 of 6");
+                            text1.setText("City");
+                            text2.setText("Country");
+                            text4.setText("Job");
+                            stateInt++;
+                            setUsername.setVisibility(View.GONE);
+                            setPassword.setVisibility(View.GONE);
+                            setAge.setVisibility(View.GONE);
+                            setCity.setVisibility(View.VISIBLE);
+                            setCountry.setVisibility(View.VISIBLE);
+                            setJob.setVisibility(View.VISIBLE);
+                        }catch (NumberFormatException e){
+                            Toast.makeText(context, "Age invalid", Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(context, "Something wrong...", Toast.LENGTH_SHORT).show();
                     }
@@ -176,7 +187,6 @@ public class ProfileActivity extends AppCompatActivity{
                     text3.setText("Film Tastes");
                     film.clear();
                     optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_FILM));
-                    next_or_save_b.setText("Save");
                 }else if(stateInt == 5){
                     Toast.makeText(context, "Great, Film selected correctly!", Toast.LENGTH_SHORT).show();
                     state.setText("6 of 6");
@@ -184,6 +194,7 @@ public class ProfileActivity extends AppCompatActivity{
                     text3.setText("Read Tastes");
                     read.clear();
                     optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_READ));
+                    next_or_save_b.setText("Save");
                 }else if(stateInt == 6){
                     final ProgressDialog progressDialog = new ProgressDialog(context);
                     progressDialog.setIndeterminate(true);
@@ -248,7 +259,7 @@ public class ProfileActivity extends AppCompatActivity{
                             editor.putString("FilmTastes", mainUser.getFilmsTastes());
                             editor.putString("ReadingTastes", mainUser.getReadingTastes());
 
-                            editor.commit();
+                            editor.apply();
 
                             Toast.makeText(context, "Profile saved succesfully", Toast.LENGTH_SHORT).show();
                             if(progressDialog.isShowing())progressDialog.dismiss();
@@ -413,6 +424,7 @@ public class ProfileActivity extends AppCompatActivity{
     }
 
     private void backToFilm(){
+        Button next_or_save_b = (Button) findViewById(R.id.next_save_b);
         TextView text3 = (TextView) findViewById(R.id.textView2);
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         text3.setText("Film Tastes");
@@ -420,6 +432,7 @@ public class ProfileActivity extends AppCompatActivity{
         optionsList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, OPTIONS_FILM));
         state.setText("5 of 6");
         stateInt--;
+        next_or_save_b.setText("Save");
     }
 
     @Override

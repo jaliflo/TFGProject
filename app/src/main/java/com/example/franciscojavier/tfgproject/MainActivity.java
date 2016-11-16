@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity{
     private BluetoothAdapter mBluetoothAdapter;
 
     private boolean askedDiscoverability = false;
+    private boolean chatState = false;
 
     private String mUsername;
 
@@ -319,6 +320,8 @@ public class MainActivity extends AppCompatActivity{
 
         mConnectedChat = new Chat();
         mConnectedChat.setStartDateTime(Calendar.getInstance().getTime());
+
+        chatState = true;
     }
 
     private void endChat(){
@@ -353,6 +356,8 @@ public class MainActivity extends AppCompatActivity{
 
         mConnectedChat = null;
         mConnectedUserName = null;
+
+        chatState = false;
     }
 
     private void sendUserName(){
@@ -484,7 +489,9 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed(){
-        endChat();
+        if(chatState) {
+            endChat();
+        }
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
