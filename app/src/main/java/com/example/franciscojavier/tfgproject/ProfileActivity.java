@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity{
         film = new ArrayList<>();
         music = new ArrayList<>();
 
-        optionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*optionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String element = (String) parent.getItemAtPosition(position);
@@ -108,8 +108,31 @@ public class ProfileActivity extends AppCompatActivity{
                         read.add(element);
                     }
                 }
+
+                ProfileListData data = (ProfileListData) parent.getItemAtPosition(position);
+                if(data.isSelected()){
+                    if(stateInt == 3){
+                        hobbies.add(data.getTasteText());
+                    }else if(stateInt == 4){
+                        music.add(data.getTasteText());
+                    }else if(stateInt == 5){
+                        film.add(data.getTasteText());
+                    }else if(stateInt == 6){
+                        read.add(data.getTasteText());
+                    }
+                }else{
+                    if(stateInt == 3){
+                        hobbies.remove(data.getTasteText());
+                    }else if(stateInt == 4){
+                        music.remove(data.getTasteText());
+                    }else if(stateInt == 5){
+                        film.remove(data.getTasteText());
+                    }else if(stateInt == 6){
+                        read.remove(data.getTasteText());
+                    }
+                }
             }
-        });
+        });*/
 
         final Button next_or_save_b = (Button) findViewById(R.id.next_save_b);
         next_or_save_b.setOnClickListener(new View.OnClickListener() {
@@ -168,34 +191,42 @@ public class ProfileActivity extends AppCompatActivity{
                         setJob.setVisibility(View.GONE);
                         text3.setVisibility(View.VISIBLE);
                         hobbies.clear();
-                        optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_HOBBIES));
+                        optionsList.setAdapter(new ProfileListAdapter(context, OPTIONS_HOBBIES));
                         optionsList.setVisibility(View.VISIBLE);
                     }else{
                         Toast.makeText(context, "Something wrong...", Toast.LENGTH_SHORT).show();
                     }
                 }else if(stateInt == 3){
                     Toast.makeText(context, "Great, hobbies selected correctly!", Toast.LENGTH_SHORT).show();
+                    ProfileListAdapter adapter = (ProfileListAdapter) optionsList.getAdapter();
+                    hobbies = adapter.getSelectedElements();
                     state.setText("4 of 6");
                     stateInt++;
                     text3.setText("Music Tastes");
                     music.clear();
-                    optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_MUSIC));
+                    optionsList.setAdapter(new ProfileListAdapter(context, OPTIONS_MUSIC));
                 }else if(stateInt == 4){
                     Toast.makeText(context, "Great, Music selected correctly!", Toast.LENGTH_SHORT).show();
+                    ProfileListAdapter adapter = (ProfileListAdapter) optionsList.getAdapter();
+                    music = adapter.getSelectedElements();
                     state.setText("5 of 6");
                     stateInt++;
                     text3.setText("Film Tastes");
                     film.clear();
-                    optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_FILM));
+                    optionsList.setAdapter(new ProfileListAdapter(context, OPTIONS_FILM));
                 }else if(stateInt == 5){
                     Toast.makeText(context, "Great, Film selected correctly!", Toast.LENGTH_SHORT).show();
+                    ProfileListAdapter adapter = (ProfileListAdapter) optionsList.getAdapter();
+                    film = adapter.getSelectedElements();
                     state.setText("6 of 6");
                     stateInt++;
                     text3.setText("Read Tastes");
                     read.clear();
-                    optionsList.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, OPTIONS_READ));
+                    optionsList.setAdapter(new ProfileListAdapter(context, OPTIONS_READ));
                     next_or_save_b.setText("Save");
                 }else if(stateInt == 6){
+                    ProfileListAdapter adapter = (ProfileListAdapter) optionsList.getAdapter();
+                    read = adapter.getSelectedElements();
                     final ProgressDialog progressDialog = new ProgressDialog(context);
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Sending Data");
@@ -408,7 +439,7 @@ public class ProfileActivity extends AppCompatActivity{
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         text3.setText("Hobbies");
         hobbies.clear();
-        optionsList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, OPTIONS_HOBBIES));
+        optionsList.setAdapter(new ProfileListAdapter(this, OPTIONS_HOBBIES));
         state.setText("3 of 6");
         stateInt--;
     }
@@ -418,7 +449,7 @@ public class ProfileActivity extends AppCompatActivity{
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         text3.setText("Music Tastes");
         music.clear();
-        optionsList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, OPTIONS_MUSIC));
+        optionsList.setAdapter(new ProfileListAdapter(this, OPTIONS_MUSIC));
         state.setText("4 of 6");
         stateInt--;
     }
@@ -429,7 +460,7 @@ public class ProfileActivity extends AppCompatActivity{
         ListView optionsList = (ListView) findViewById(R.id.optionsList);
         text3.setText("Film Tastes");
         film.clear();
-        optionsList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, OPTIONS_FILM));
+        optionsList.setAdapter(new ProfileListAdapter(this, OPTIONS_FILM));
         state.setText("5 of 6");
         stateInt--;
         next_or_save_b.setText("Save");
