@@ -7,6 +7,10 @@ import com.example.franciscojavier.tfgproject.datamodel.MessageToServer;
 import com.example.franciscojavier.tfgproject.datamodel.User;
 import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,5 +42,16 @@ public class Utils {
         }
 
         return messageToServer;
+    }
+
+    public static String sha256(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA256");
+        byte[] result = messageDigest.digest(input.getBytes("UTF-8"));
+        StringBuffer stringBuffer = new StringBuffer();
+        for(int i = 0;i<result.length;i++){
+            stringBuffer.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return stringBuffer.toString();
     }
 }

@@ -33,19 +33,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.franciscojavier.tfgproject.datamodel.MacsList;
-import com.example.franciscojavier.tfgproject.datamodel.User;
 import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
-import java.util.ArrayList;
+import org.w3c.dom.Text;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -57,7 +53,7 @@ import retrofit.client.Response;
  * by the user, the MAC address of the device is sent back to the parent
  * Activity in the result Intent.
  */
-public class DeviceListActivity extends Activity implements WifiP2pManager.ConnectionInfoListener{
+public class UserListActivity extends Activity implements WifiP2pManager.ConnectionInfoListener{
 
     /**
      * Return Intent extra
@@ -98,7 +94,7 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
 
         // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_device_list);
+        setContentView(R.layout.activity_users_list);
 
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
@@ -152,6 +148,9 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
         setProgressBarIndeterminateVisibility(true);
         setTitle(R.string.scanning);
 
+        TextView feedback = (TextView) findViewById(R.id.searching_feedback);
+        feedback.setText("searching bluetooth devices");
+
         // Turn on sub-title for new devices
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
@@ -174,7 +173,7 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
             mBtAdapter.cancelDiscovery();
 
             // Get the device MAC address, which is the last 17 chars in the View
-            String address = macsList.macList.get(arg2);
+            String address = macsList.macList.get(arg2-1);
 
 
             // Create the result Intent and include the MAC address
@@ -203,22 +202,29 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
                 macsList.macList.add(device.getAddress());
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                final TextView feedback = (TextView) findViewById(R.id.searching_feedback);
+                feedback.setText("calculating compatibilities");
                 SharedPreferences settings = getSharedPreferences(Constants.PREFFS_NAME, 0);
                 restService.getApiTFGService().getListOfNearbyUsers(settings.getInt("Id", 0), macsList, new Callback<List<String>>() {
                     @Override
                     public void success(List<String> strings, Response response) {
+                        String header = "Name   |   Compatibility";
+                        mNewDevicesArrayAdapter.add(header);
+                        feedback.setText("search complete");
                         macsList.macList.clear();
                         for(String user: strings){
                             String splitted[] = user.split(",");
-                            mNewDevicesArrayAdapter.add(splitted[0]+"%");
+                            String name_comp[] = splitted[0].split(" ");
+                            mNewDevicesArrayAdapter.add(name_comp[0]+"  |   "+name_comp[1]+"%");
                             macsList.macList.add(splitted[1]);
                         }
                         setProgressBarIndeterminateVisibility(false);
-                        setTitle(R.string.select_device);
 
                         if (mNewDevicesArrayAdapter.getCount() == 0) {
                             String noDevices = getResources().getText(R.string.none_found).toString();
                             mNewDevicesArrayAdapter.add(noDevices);
+                        }else{
+                            setTitle(R.string.select_device);
                         }
                     }
 
@@ -256,7 +262,7 @@ public class DeviceListActivity extends Activity implements WifiP2pManager.Conne
             if(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)){
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
                 if (networkInfo.isConnected()){
-                    mManager.requestConnectionInfo(mChannel, DeviceListActivity.this);
+                    mManager.requestConnectionInfo(mChannel, UserListActivity.this);
                 }
             }
         }

@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final Context context = this;
 
-        TextView register = (TextView) findViewById(R.id.regB);
+        Button register = (Button) findViewById(R.id.regB);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

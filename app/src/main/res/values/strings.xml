@@ -4,7 +4,8 @@
     <string name="title_other_devices">Nearby users</string>
     <string name="button_scan">Scan for nearby users</string>
     <string name="scanning">scanning for nearby users…</string>
-    <string name="select_device">select a user to connect</string>
+    <string name="sending_mac_list">calculating compatibilities…</string>
+    <string name="select_device">select a user to send chat request</string>
     <string name="none_found">no users found</string>
     <string name="title_connected">connected to: </string>
     <string name="title_connecting">connecting…</string>

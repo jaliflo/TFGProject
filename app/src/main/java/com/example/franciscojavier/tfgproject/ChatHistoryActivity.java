@@ -55,7 +55,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
 
         final Context context = this;
 
-        Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
+        /*Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
         chatsBackupB.setVisibility(View.GONE);
         chatsBackupB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +76,7 @@ public class ChatHistoryActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
-        });
+        });*/
         showUsers();
     }
 
@@ -92,8 +92,8 @@ public class ChatHistoryActivity extends AppCompatActivity {
         usersView.setAdapter(mDataArrayAdapter);
         listViewState = 1;
 
-        Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
-        chatsBackupB.setVisibility(View.GONE);
+        /*Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
+        chatsBackupB.setVisibility(View.GONE);*/
 
         usersView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,8 +126,8 @@ public class ChatHistoryActivity extends AppCompatActivity {
             }
         });
 
-        Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
-        chatsBackupB.setVisibility(View.VISIBLE);
+        /*Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
+        chatsBackupB.setVisibility(View.VISIBLE);*/
     }
 
     private void uploadChats(final List<Chat> chatsToUpload){
@@ -205,8 +205,8 @@ public class ChatHistoryActivity extends AppCompatActivity {
             }
         }
 
-        Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
-        chatsBackupB.setVisibility(View.GONE);
+        /*Button chatsBackupB = (Button) findViewById(R.id.chatsBackupb);
+        chatsBackupB.setVisibility(View.GONE);*/
 
         mDataArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, messages);
 

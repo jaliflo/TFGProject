@@ -25,6 +25,8 @@ import com.example.franciscojavier.tfgproject.datamodel.MainUser;
 import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
 import java.io.StringBufferInputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,7 +235,11 @@ public class ProfileActivity extends AppCompatActivity{
                     progressDialog.show();
 
                     username = setUsername.getText().toString();
-                    password = setPassword.getText().toString();
+                    try {
+                        password = Utils.sha256(setPassword.getText().toString());
+                    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                     cityAndCountry = setCity.getText().toString()+"-"+setCountry.getText().toString();
                     job = setJob.getText().toString();
                     age = Integer.parseInt(setAge.getText().toString());

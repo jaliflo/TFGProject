@@ -12,7 +12,7 @@
     <Button
         android:layout_width="100pt"
         android:layout_height="100pt"
-        android:text="Push for Discovery"
+        android:text="Press for Discovery"
         android:id="@+id/discoveryB"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"

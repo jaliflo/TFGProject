@@ -2,7 +2,6 @@ package com.example.franciscojavier.tfgproject;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -13,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -28,10 +26,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.franciscojavier.tfgproject.database.DbHelper;
 import com.example.franciscojavier.tfgproject.database.DbManager;
 import com.example.franciscojavier.tfgproject.datamodel.Chat;
 import com.example.franciscojavier.tfgproject.datamodel.ChatMessage;
@@ -39,7 +35,6 @@ import com.example.franciscojavier.tfgproject.datamodel.User;
 import com.example.franciscojavier.tfgproject.webapiclient.RestService;
 
 import java.util.Calendar;
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -224,7 +219,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startDeviceListActivity(Context context){
-        Intent intent = new Intent(context, DeviceListActivity.class);
+        Intent intent = new Intent(context, UserListActivity.class);
         startActivityForResult(intent, REQUEST_CONNECT_DEVICE);
     }
 
@@ -290,8 +285,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setupChat(){
-        if(DeviceListActivity.deviceListActivity != null) {
-            DeviceListActivity.deviceListActivity.finish();
+        if(UserListActivity.deviceListActivity != null) {
+            UserListActivity.deviceListActivity.finish();
         }
 
         mConversationArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -462,7 +457,7 @@ public class MainActivity extends AppCompatActivity{
             if(resultCode == Activity.RESULT_OK){
                 // Get the device MAC address
                 String address = data.getExtras()
-                        .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                        .getString(UserListActivity.EXTRA_DEVICE_ADDRESS);
                 connectDevice(address);
             }
         }

@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DeviceListActivity"
+            android:name=".UserListActivity"
             android:theme="@android:style/Theme.Holo.Dialog" />
         <activity
             android:name=".ChatHistoryActivity"

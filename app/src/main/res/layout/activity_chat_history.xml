@@ -9,20 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.franciscojavier.tfgproject.ChatHistoryActivity">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dataView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="110dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:text="Chats Backup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/chatsBackupb"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="39dp" />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dataView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true" />
+    </FrameLayout>
+
 </RelativeLayout>

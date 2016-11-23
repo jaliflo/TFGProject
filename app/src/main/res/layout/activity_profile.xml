@@ -16,7 +16,8 @@
         android:ems="10"
         android:id="@+id/ageED"
         android:layout_alignBottom="@+id/textView4"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:hint="Number required" />
 
     <TextView
         android:text="Password"
@@ -36,7 +37,8 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignParentEnd="true"
         android:id="@+id/countryED"
-        android:layout_alignStart="@+id/usernameED" />
+        android:layout_alignStart="@+id/usernameED"
+        android:hint="Required" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -46,7 +48,8 @@
         android:id="@+id/cityED"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_toEndOf="@+id/textView1" />
+        android:layout_toEndOf="@+id/textView1"
+        android:hint="Required" />
 
     <TextView
         android:text="Username"
@@ -87,7 +90,8 @@
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignParentEnd="true"
         android:id="@+id/passwordED"
-        android:layout_alignStart="@+id/usernameED" />
+        android:layout_alignStart="@+id/usernameED"
+        android:hint="Required" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -97,7 +101,10 @@
         android:id="@+id/usernameED"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_toEndOf="@+id/textView1" />
+        android:layout_toEndOf="@+id/textView1"
+        android:singleLine="false"
+        android:selectAllOnFocus="false"
+        android:hint="Required" />
 
     <TextView
         android:text="Hobbies"

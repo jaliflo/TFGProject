@@ -33,9 +33,14 @@
     <ListView
         android:id="@+id/new_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:stackFromBottom="true"
+        android:layout_height="127dp"
+
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:id="@+id/searching_feedback"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 </LinearLayout>
